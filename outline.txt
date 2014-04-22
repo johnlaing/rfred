@@ -53,3 +53,67 @@ req: release_id
 url: fred/release/related_tags
 desc: Get the related tags for a release.
 req: release_id, tag_names
+
+url: fred/series
+desc: Get an economic data series.
+req: series_id
+
+url: fred/series/categories
+desc: Get the categories for an economic data series.
+req: series_id
+
+url: fred/series/observations
+desc: Get the observations or data values for an economic data series.
+req: series_id
+
+url: fred/series/release
+desc: Get the release for an economic data series.
+req: series_id
+
+url: fred/series/search
+desc: Get economic data series that match keywords.
+req: search_text
+
+url: fred/series/search/tags
+desc: Get the tags for a series search.
+req: series_search_text
+
+url: fred/series/search/related_tags
+desc: Get the related tags for a series search.
+req: series_search_text, tag_names
+
+url: fred/series/tags
+desc: Get the tags for an economic data series.
+req: series_id
+
+url: fred/series/updates
+desc: Get economic data series sorted by when observations were updated on the FRED® server.
+req:
+
+url: fred/series/vintagedates
+desc: Get the dates in history when a series' data values were revised or new data values were released.
+req: series_id
+
+url: fred/sources
+desc: Get all sources of economic data.
+req:
+
+url: fred/source
+desc: Get a source of economic data.
+req: source_id
+
+url: fred/source/releases
+desc: Get the releases for a source.
+req: source_id
+
+url: fred/tags
+desc: Get all tags, search for tags, or get tags by name.
+req:
+
+url: fred/related_tags
+desc: Get the related tags for one or more tags.
+req: tag_names
+
+url: fred/tags/series
+desc: Get the series matching tags.
+req: tag_names
