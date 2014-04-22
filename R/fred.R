@@ -21,6 +21,7 @@ process.fred <- function(xml) {
 
     ans <- data.frame(row.names=seq(length(att)))
     for (x in cn) ans[, x] <- type.convert(sapply(att, function(a) a[x]), as.is=TRUE)
+    attr(ans, "metadata") <- xmlAttrs(r)
     ans
 }
 
@@ -43,6 +44,17 @@ fred.category.related <- function(f, category_id, realtime_start=NULL, realtime_
     process.fred(x)
 }
 
-fred.category.series <- function(...) stop("not implemented")
-fred.category.tags <- function(...) stop("not implemented")
-fred.category.related_tags <- function(...) stop("not implemented")
+fred.category.series <- function(f, category_id, realtime_start=NULL, realtime_end=NULL, limit=NULL, offset=NULL, order_by=NULL, sort_order=NULL, filter_variable=NULL, filter_value=NULL, tag_name=NULL) {
+    x <- get.fred(f, "category/series", c(category_id=category_id, realtime_start=realtime_start, realtime_end=realtime_end, limit=limit, offset=offset, order_by=order_by, sort_order=sort_order, filter_variable=filter_variable, filter_value=filter_value, tag_name=tag_name))
+    process.fred(x)
+}
+
+fred.category.tags <- function(f, category_id, realtime_start=NULL, realtime_end=NULL, tag_names=NULL, tag_group_id=NULL, search_text=NULL, limit=NULL, offset=NULL, order_by=NULL, sort_order=NULL) {
+    x <- get.fred(f, "category/tags", c(category_id=category_id, realtime_start=realtime_start, realtime_end=realtime_end, tag_names=tag_names, tag_group_id=tag_group_id, search_text=search_text, limit=limit, offset=offset, order_by=order_by, sort_order=sort_order))
+    process.fred(x)
+}
+
+fred.category.related_tags <- function(f, category_id, tag_names, realtime_start=NULL, realtime_end=NULL, tag_group_id=NULL, search_text=NULL, limit=NULL, offset=NULL, order_by=NULL, sort_order=NULL) {
+    x <- get.fred(f, "category/related_tags", c(category_id=category_id, tag_names=tag_names, realtime_start=realtime_start, realtime_end=realtime_end, tag_group_id=tag_group_id, search_text=search_text, limit=limit, offset=offset, order_by=order_by, sort_order=sort_order))
+    process.fred(x)
+}
