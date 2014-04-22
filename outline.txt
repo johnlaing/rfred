@@ -1,0 +1,29 @@
+url: fred/category
+desc: Get a category.
+req:
+opt: category_id
+
+url: fred/category/children
+desc: Get the child categories for a specified parent category.
+req:
+opt: category_id, realtime_start, realtime_end
+
+url: fred/category/related
+desc: Get the related categories for a category.
+req: category_id
+opt: realtime_start, realtime_end
+
+url: fred/category/series
+desc: Get the series in a category.
+req: category_id
+opt: realtime_start, realtime_end, limit, offset, order_by, sort_order, filter_variable, filter_value, tag_names
+
+url: fred/category/tags
+desc: Get the tags for a category.
+req: category_id
+opt: realtime_start, realtime_end, tag_names, tag_group_id, search_text, limit, offset, order_by, sort_order
+
+url: fred/category/related_tags
+desc: Get the related tags for a category.
+req: category_id, tag_names
+opt: realtime_start, realtime_end, tag_group_id, search_text, limit, offset, order_by, sort_order
