@@ -1,28 +1,30 @@
 outline <- readLines("outline.txt")
 
 ## check file format
-stopifnot(length(outline) %% 5 == 4)
-chunks <- seq(1, length(outline), by=5)
+stopifnot(length(outline) %% 4 == 3)
+chunks <- seq(1, length(outline), by=4)
 stopifnot(grepl("^url: ", outline[chunks]))
 stopifnot(grepl("^desc: ", outline[chunks+1]))
-stopifnot(grepl("^req:", outline[chunks+2]))
-stopifnot(grepl("^opt:", outline[chunks+3]))
+stopifnot(grepl("^(req|opt):", outline[chunks+2]))
 
 url <- sub("^url: *", "", outline[chunks])
 desc <- sub("^url: *", "", outline[chunks+1])
-req <- strsplit(sub("^req: *", "", outline[chunks+2]), ", *")
-opt <- strsplit(sub("^opt: *", "", outline[chunks+3]), ", *")
+args <- strsplit(sub("^(req|opt): *", "", outline[chunks+2]), ", *")
+opt <- grepl("^opt:", outline[chunks+2])
 
-
-make.fun <- function(url, req, opt) {
-    fun <- c(
-        '%s <- function(f, %s) {',
-        '    x <- get.fred(f, "%s", c(%s))',
-        '    process.fred(x)',
-        '}')
-    fun[1] <- sprintf(fun[1], gsub("/", ".", url), paste(c(req, paste0(opt, "=NULL")), collapse=", "))
-    fun[2] <- sprintf(fun[2], url, paste(c(req, opt), c(req, opt), sep="=", collapse=", "))
-    fun
+make.fun <- function(url, args, opt) {
+    if (length(args) == 0) {
+        sprintf('%s <- function(f, ...) get.fred(f, "%s", c(...))',
+                gsub("/", ".", url), url)
+    } else if (opt) {
+        sprintf('%s <- function(f, %s, ...) get.fred(f, "%s", c(%s, ...))',
+                gsub("/", ".", url), paste(args, "NULL", sep="=", collapse=", "),
+                url, paste(args, args, sep="=", collapse=", "))
+    } else {
+        sprintf('%s <- function(f, %s, ...) get.fred(f, "%s", c(%s, ...))',
+                gsub("/", ".", url), paste(args, collapse=", "),
+                url, paste(args, args, sep="=", collapse=", "))
+    }
 }
-funs <- mapply(make.fun, url, req, opt, SIMPLIFY=FALSE)
-writeLines(unlist(funs), "R/user.R")
+funs <- mapply(make.fun, url, args, opt)
+writeLines(funs, "R/user.R")

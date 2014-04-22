@@ -1,21 +1,35 @@
 ## basic settings
-fred <- function(api.key) {
+fred <- function(api_key, file_type="xml", processor=guess.processor(file_type), ...) {
     structure(list(
         base.url="http://api.stlouisfed.org",
-        api.key =api.key),
+        processor=processor,
+        params=c(api_key=api_key, file_type=file_type, ...)),
     class="fred")
+}
+
+guess.processor <- function(file_type) {
+    if (file_type == "xml") basic.xml.processor else anti.processor
 }
 
 
 ## interface to webservices API
 get.fred <- function(f, url, options=c()) {
-    options["api_key"] <- f$api.key
+    if (length(options) & (is.null(names(options)) | any(names(options) == "")))
+        stop("options must be named")
+    options <- c(f$params, options)
     opt.str <- paste(names(options), options, sep="=", collapse="&")
-    xmlTreeParse(sprintf("%s/%s?%s", f$base.url, url, opt.str))
+
+    conn <- url(sprintf("%s/%s?%s", f$base.url, url, opt.str))
+    raw <- readLines(conn, warn=FALSE)
+    close(conn)
+    f$processor(raw, url, options)
 }
 
-process.fred <- function(xml) {
-    r <- xmlRoot(xml)
+anti.processor <- function(xml, url, options) return(xml)
+
+basic.xml.processor <- function(xml, url, options) {
+    require(XML)
+    r <- xmlRoot(xmlTreeParse(xml, asText=TRUE))
     att <- lapply(xmlChildren(r), xmlAttrs)
     cn <- unique(unlist(lapply(att, names)))
 
