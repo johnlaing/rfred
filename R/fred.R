@@ -30,7 +30,14 @@ anti.processor <- function(xml, url, options) return(xml)
 basic.xml.processor <- function(xml, url, options) {
     require(XML)
     r <- xmlRoot(xmlTreeParse(xml, asText=TRUE))
-    att <- lapply(xmlChildren(r), xmlAttrs)
+    att <- lapply(xmlChildren(r), function(x) {
+        a <- xmlAttrs(x)
+        if (length(v <- xmlValue(x))) {
+            names(v) <- xmlName(x)
+            a <- c(a, v)
+        }
+        a
+    })
     cn <- unique(unlist(lapply(att, names)))
 
     ans <- data.frame(row.names=seq(length(att)))

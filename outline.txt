@@ -21,3 +21,35 @@ req: category_id
 url: fred/category/related_tags
 desc: Get the related tags for a category.
 req: category_id, tag_names
+
+url: fred/releases
+desc: Get all releases of economic data.
+req:
+
+url: fred/releases/dates
+desc: Get release dates for all releases of economic data.
+req:
+
+url: fred/release
+desc: Get a release of economic data.
+req: release_id
+
+url: fred/release/dates
+desc: Get release dates for a release of economic data.
+req: release_id
+
+url: fred/release/series
+desc: Get the series on a release of economic data.
+req: release_id
+
+url: fred/release/sources
+desc: Get the sources for a release of economic data.
+req: release_id
+
+url: fred/release/tags
+desc: Get the tags for a release.
+req: release_id
+
+url: fred/release/related_tags
+desc: Get the related tags for a release.
+req: release_id, tag_names
