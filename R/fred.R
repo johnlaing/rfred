@@ -25,11 +25,11 @@ get.fred <- function(f, url, options=c()) {
     f$processor(raw, url, options)
 }
 
-anti.processor <- function(xml, url, options) return(xml)
+anti.processor <- function(res, url, options) return(res)
 
-basic.xml.processor <- function(xml, url, options) {
+basic.xml.processor <- function(res, url, options) {
     require(XML)
-    r <- xmlRoot(xmlTreeParse(xml, asText=TRUE))
+    r <- xmlRoot(xmlTreeParse(res, asText=TRUE))
     att <- lapply(xmlChildren(r), function(x) {
         a <- xmlAttrs(x)
         if (length(v <- xmlValue(x))) {
