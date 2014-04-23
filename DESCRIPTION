@@ -1,8 +1,8 @@
 Package: fred
 Type: Package
 Title: Federal Reserve Economic Data
-Version: 0.1
-Date: 2014-04-21
+Version: 0.1.0
+Date: 2014-04-23
 Author: John Laing
 Maintainer: John Laing <john.laing@gmail.com>
 Description: Provides an interface to the Federal Reserve Economic Database. The database is maintained by the St. Louis Fed, while this package is merely a wrapper around the public API. Compulsory disclaimer: this product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.
