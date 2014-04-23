@@ -8,7 +8,7 @@ fred <- function(api_key, file_type="xml", processor=guess.processor(file_type),
 }
 
 guess.processor <- function(file_type) {
-    if (file_type == "xml") basic.xml.processor else anti.processor
+    if (file_type == "xml") smart.xml.processor else anti.processor
 }
 
 
@@ -46,3 +46,23 @@ basic.xml.processor <- function(res, url, options) {
     ans
 }
 
+smart.xml.processor <- function(res, url, options) {
+    require(zoo)
+    ans <- basic.xml.processor(res, url, options)
+
+    ## scrub date/time
+    date.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    time.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}-[0-9]{2}$"
+    for (i in seq_along(ans)) {
+        if (is.character(ans[, i]) & all(grepl(date.pattern, ans[, i])))
+            ans[, i] <- as.Date(ans[, i])
+        if (is.character(ans[, i]) & all(grepl(time.pattern, ans[, i])))
+            ans[, i] <- as.POSIXct(ans[, i])
+    }
+
+    ## special cases
+    if (url == "fred/series/observations") {
+        ans <- zoo(ans$value, ans$date)
+    }
+    return(ans)
+}

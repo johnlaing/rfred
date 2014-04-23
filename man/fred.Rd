@@ -71,7 +71,7 @@
 \arguments{
   \item{api_key}{An application-specific code assigned by the Fed.}
   \item{file_type}{Data return format, either xml or json. Current default is xml, but this might change in the future.}
-  \item{processor}{A function to process data returned via the web service. The default processor for XML creates a simple \code{data.frame}, but other mechanisms might be preferable for different use cases. See \link{basic.xml.processor}.}
+  \item{processor}{A function to process data returned via the web service. The default processor for XML creates a simple \code{data.frame}, but other mechanisms might be preferable for different use cases. See \code{\link{smart.xml.processor}}.}
   \item{f}{A structure as returned by the \code{fred} function.}
   \item{category_id, release_id, series_id, source_id}{FRED identifiers for the associated objects.}
   \item{search_text, series_search_text, tag_names}{HTML-escaped search string, or a semicolon-separated list thereof.}

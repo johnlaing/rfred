@@ -3,6 +3,7 @@
 \alias{guess.processor}
 \alias{anti.processor}
 \alias{basic.xml.processor}
+\alias{smart.xml.processor}
 
 \title{FRED backend}
 \description{
@@ -13,6 +14,7 @@
   guess.processor(file_type)
   anti.processor(res, url, options)
   basic.xml.processor(res, url, options)
+  smart.xml.processor(res, url, options)
 }
 \arguments{
   \item{f}{A structure as returned by the \code{fred} function.}
@@ -26,6 +28,7 @@
   The \code{file_type} option determines the format of the response -- either xml or json -- and of course it only makes sense to use a processor that knows how to handle the specified format. The \code{guess.processor} function takes care of that in the default case by choosing a processor based on file type.
   The \code{anti.processor} function does no processing and returns text as-is. This is useful for development and debugging, but probably not much else.
   The \code{basic.xml.processor} parses XML into a \code{data.frame}. It does simple classification via \code{type.convert}, but does not bother with dates or other non-atomic types.
+  The \code{smart.xml.processor} extends \code{basic.xml.processor} by doing date/time classification and returning observations as a \code{\link[zoo]{zoo}} object.
 }
 \value{
 The \code{fred} function returns a struct containing basic API settings. All other functions rely on the \code{processor} element of their first argument; return types are dependent on that function.
