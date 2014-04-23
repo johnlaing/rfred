@@ -1,4 +1,7 @@
-outline <- readLines("outline.txt")
+## generate code for user-facing functions
+## to be called from top package directory
+## e.g., Rscript generate/parse.outline.R
+outline <- readLines("generate/outline.txt")
 
 ## check file format
 stopifnot(length(outline) %% 4 == 3)
