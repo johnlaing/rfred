@@ -42,7 +42,7 @@ basic.xml.processor <- function(res, url, options) {
 
     ans <- data.frame(row.names=seq(length(att)))
     for (x in cn) ans[, x] <- type.convert(sapply(att, function(a) a[x]), as.is=TRUE)
-    attr(ans, "metadata") <- xmlAttrs(r)
+    attr(ans, "metadata") <- as.list(xmlAttrs(r))
     ans
 }
 
@@ -51,18 +51,22 @@ smart.xml.processor <- function(res, url, options) {
     ans <- basic.xml.processor(res, url, options)
 
     ## scrub date/time
-    date.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
-    time.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}-[0-9]{2}$"
-    for (i in seq_along(ans)) {
-        if (is.character(ans[, i]) & all(grepl(date.pattern, ans[, i])))
-            ans[, i] <- as.Date(ans[, i])
-        if (is.character(ans[, i]) & all(grepl(time.pattern, ans[, i])))
-            ans[, i] <- as.POSIXct(ans[, i])
+    scrub <- function(x) {
+        if (is.character(x)) {
+            date.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            time.pattern <- "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}-[0-9]{2}$"
+            if (all(grepl(date.pattern, x))) x <- as.Date(x)
+            if (all(grepl(time.pattern, x))) x <- as.POSIXct(x)
+        }
+        x
     }
+    ans[] <- lapply(ans, scrub)
+    meta <- lapply(attr(ans, "metadata"), scrub)
 
     ## special cases
     if (url == "fred/series/observations") {
         ans <- zoo(ans$value, ans$date)
     }
+    attr(ans, "metadata") <- meta
     return(ans)
 }
