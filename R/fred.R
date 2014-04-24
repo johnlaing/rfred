@@ -49,6 +49,12 @@ basic.xml.processor <- function(res, url, options) {
 smart.xml.processor <- function(res, url, options) {
     require(zoo)
     ans <- basic.xml.processor(res, url, options)
+    meta <- attr(ans, "metadata")
+
+    ## remove columns that just duplicate metadata
+    for (n in intersect(names(ans), names(meta))) {
+        if (all(ans[, n] == meta[[n]])) ans[, n] <- NULL
+    }
 
     ## scrub date/time
     scrub <- function(x) {
@@ -61,7 +67,7 @@ smart.xml.processor <- function(res, url, options) {
         x
     }
     ans[] <- lapply(ans, scrub)
-    meta <- lapply(attr(ans, "metadata"), scrub)
+    meta <- lapply(meta, scrub)
 
     ## special cases
     if (url == "fred/series/observations") {
