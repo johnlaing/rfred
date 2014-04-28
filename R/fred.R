@@ -41,7 +41,7 @@ basic.xml.processor <- function(res, url, options) {
     cn <- unique(unlist(lapply(att, names)))
 
     ans <- data.frame(row.names=seq(length(att)))
-    for (x in cn) ans[, x] <- type.convert(sapply(att, function(a) a[x]), as.is=TRUE)
+    for (x in cn) ans[, x] <- type.convert(sapply(att, function(a) a[x]), na.strings=c("NA", "."), as.is=TRUE)
     attr(ans, "metadata") <- as.list(xmlAttrs(r))
     ans
 }
