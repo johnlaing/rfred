@@ -36,7 +36,7 @@
   Compulsory disclaimer: this product uses the FRED API but is not endorsed or certified by the Federal Reserve Bank of St. Louis.
 }
 \usage{
-  fred(api_key, file_type="xml", processor=guess.processor(file_type), ...)
+  fred(api_key, file_type="json", processor=guess.processor(file_type), ...)
   fred.category(f, category_id=NULL, ...)
   fred.category.children(f, category_id=NULL, ...)
   fred.category.related(f, category_id, ...)
