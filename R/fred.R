@@ -11,24 +11,22 @@ guess.processor <- function(file_type) {
     switch(file_type,
         json=smart.json.processor,
         xml=smart.xml.processor,
-        anti.processor)
+        NULL)
 }
 
 
 ## interface to webservices API
-get.fred <- function(f, url, options=c()) {
+get.fred <- function(f, url, options=c(), processor=f$processor) {
     if (length(options) & (is.null(names(options)) | any(names(options) == "")))
         stop("options must be named")
-    options <- c(f$params, options)
-    opt.str <- paste(names(options), options, sep="=", collapse="&")
+    exp.options <- c(f$params, options)
+    opt.str <- paste(names(exp.options), exp.options, sep="=", collapse="&")
 
     conn <- url(sprintf("%s/%s?%s", f$base.url, url, opt.str))
     raw <- readLines(conn, warn=FALSE)
     close(conn)
-    f$processor(raw, url, options)
+    if (!is.null(processor)) processor(raw, url, options) else raw
 }
-
-anti.processor <- function(res, url, options) return(res)
 
 basic.xml.processor <- function(res, url, options) {
     require(XML)
