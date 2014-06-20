@@ -30,7 +30,7 @@ fred.series.search(f, "monetary+service+index")
 fred.series.search.tags(f, "monetary+service+index")
 fred.series.search.related_tags(f, "mortgage+rate", "30-year")
 fred.series.tags(f, "STLFSI")
-fred.series.updates(f)
+fred.series.updates(f, limit=100)
 fred.series.vintagedates(f, "GNPCA")
 
 ## sources

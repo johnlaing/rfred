@@ -88,9 +88,25 @@ basic.json.processor <- function(res, url, options) {
 }
 
 smart.json.processor <- function(res, url, options) {
+    require(jsonlite)
     require(zoo)
-    ans <- basic.json.processor(res, url, options)
-    meta <- attr(ans, "metadata")
+    r <- fromJSON(res, FALSE)
+    meta <- r[-length(r)]
+    ans <- r[[length(r)]]
+
+    ## pagination
+    if (all(c("offset", "limit") %in% names(meta)) &
+        !any(c("offset", "limit") %in% names(options))) {
+        while (with(meta, offset+limit < count)) {
+            options["offset"] <- meta$limit
+            res <- get.fred(f, url, options, NULL)
+            r <- fromJSON(res, FALSE)
+            meta$limit <- meta$limit + r$limit
+            ans <- c(ans, r[[length(r)]])
+        }
+    }
+    ## TODO: ask Jeroen to export this function
+    ans <- jsonlite:::simplify(ans)
 
     ## remove columns that just duplicate metadata
     for (n in intersect(names(ans), names(meta))) {
