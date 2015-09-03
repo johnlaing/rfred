@@ -1,7 +1,7 @@
 ## basic settings
 fred <- function(api_key, file_type="json", processor=guess.processor(file_type), ...) {
     structure(list(
-        base.url="http://api.stlouisfed.org",
+        base.url="https://api.stlouisfed.org",
         processor=processor,
         params=c(api_key=api_key, file_type=file_type, ...)),
     class="fred")
